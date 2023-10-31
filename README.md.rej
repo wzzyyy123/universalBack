@@ -1,0 +1,7 @@
+diff a/README.md b/README.md	(rejected hunks)
+@@ -0,0 +1,4 @@
++### 启动项目：
++```javascript
++	node app.js
++```
+\ No newline at end of file
