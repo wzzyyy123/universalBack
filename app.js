@@ -36,10 +36,16 @@ const jwtconfig = require('./jwt_config/index.js')
 //用了ES6的解构赋值
 const { expressjwt: jwt } = require('express-jwt')
 //使用中间件排除不需要在请求段发送token的接口(注册和登录接口)，用到了正则
-app.use(jwt({ sectet: jwtconfig.jwtSecretkey, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }))
+app.use(jwt({ secret: jwtconfig.jwtSecretkey, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }))
 
 const loginRouter = require('./router/login.js')
+const Joi = require('joi')
 app.use('/api', loginRouter)
+
+//新建中间件，用于对不符合joi验证规则的数据报错
+app.use((req, res, next) => {
+	if (err instanceof Joi.ValidationError) return res.cc(err)
+})
 
 //绑定和侦听指定的主机和端口
 app.listen(3007, () => {

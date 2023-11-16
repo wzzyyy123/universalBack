@@ -30,12 +30,12 @@ exports.register = (req, res) => {
 		reginfo.password = bcrypt.hashSync(reginfo.password, 10)
 		//第四步把账号和密码插入到user表里面
 		const sql1 = 'insert into users set ?'
-		const indentity = '用户'
+		const identity = '用户'
 		const create_time = new Date()
 		db.query(sql1, {
 			account: reginfo.account,
 			password: reginfo.password,
-			indentity,
+			identity,
 			create_time,
 			status: 0
 		}, (err, results) => {
@@ -60,8 +60,9 @@ exports.login = (req, res) => {
 	db.query(sql, loginfo.account, (err, results) => {
 		//执行sql语句失败的情况，一般在数据库断开的情况会执行失败
 		if (err) return res.cc(err)
+		//查询数据表中有没有对应的账号
 		if (results.length !== 1) return res.cc('登陆失败')
-		//第二步 对前端传过来的密码进行解密
+		//第二步 查询到账号后对前端传过来的密码进行解密
 		const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
 		if (!compareResult) {
 			return res.cc('登陆失败')
@@ -80,14 +81,14 @@ exports.login = (req, res) => {
 			update_time: ''
 		}
 		//设置token的有效时长,7小时
-		const tokenStr = jwt.sign(user, jwtconfig, jwtSecretkey, {
+		const tokenStr = jwt.sign(user, jwtconfig.jwtSecretkey, {
 			expiresIn: '7h'
 		})
 		res.send({
 			results: results[0],
 			status: 0,
 			message: '登陆成功',
-			token: 'Bearer' + tokenStr
+			token: 'Bearer ' + tokenStr
 		})
 	})
 }
