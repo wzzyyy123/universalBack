@@ -61,11 +61,11 @@ exports.login = (req, res) => {
 		//执行sql语句失败的情况，一般在数据库断开的情况会执行失败
 		if (err) return res.cc(err)
 		//查询数据表中有没有对应的账号
-		if (results.length !== 1) return res.cc('登陆失败')
+		if (results.length !== 1) return res.cc('登录失败')
 		//第二步 查询到账号后对前端传过来的密码进行解密
 		const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
 		if (!compareResult) {
-			return res.cc('登陆失败')
+			return res.cc('登录失败')
 		}
 		//第三步，判断账号是否冻结
 		if (results[0].status == 1) {
@@ -87,7 +87,7 @@ exports.login = (req, res) => {
 		res.send({
 			results: results[0],
 			status: 0,
-			message: '登陆成功',
+			message: '登录成功',
 			token: 'Bearer ' + tokenStr
 		})
 	})
