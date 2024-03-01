@@ -5,12 +5,10 @@ const express = require('express')
 const router = express.Router()
 //导入login的路由处理模块
 const loginHandler = require('../router_handle/login.js')
-//导入expressJoi
+//导入expressJoi 用于验证
 const expressJoi = require('@escook/express-joi')
 //导入验证规则
-const {
-	login_limit
-} = require('../limit/login.js')
+const { login_limit } = require('../limit/login.js')
 
 //引入router_handle的两个接口
 //注册
